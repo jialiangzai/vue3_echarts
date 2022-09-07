@@ -1,81 +1,102 @@
 <template>
   <div>
-    1
+    图表一
     <div class="chart" id="oneChart">图表</div>
   </div>
 </template>
 
 <script>
-import { inject, onMounted } from 'vue'
+import { inject, onMounted, reactive } from 'vue'
 export default {
   setup() {
     let $echarts = inject('echarts')
     let $http = inject('axios')
+    // 数据接收
+    let oneData = reactive({})
+    let xData = reactive([])
+    let yData = reactive([])
     async function getState() {
-      let oneData = await $http({ url: '/one/data' })
+      oneData = await $http({ url: '/one/data' })
       console.log(oneData)
     }
+    function setData() {
+      xData = oneData.data.chartOne.chartData.map((v) => v.title)
+      yData = oneData.data.chartOne.chartData.map((v) => v.num)
+      console.log(xData)
+      console.log(yData)
+    }
     onMounted(() => {
-      getState()
       let myChart = $echarts.init(document.getElementById('oneChart'))
-      myChart.setOption({
-        gird: {
-          left: '20',
-          containLabel: true,
-        },
-        // 设置柱状图
-        xAxis: {
-          type: 'value',
-          // axisLabel: {
-          //   show: true,
-          //   textStyle: {
-          //     color: '#fff',
-          //   },
-          // },
-        },
-        yAxis: {
-          type: 'category',
-          // data: xData,
-          // axisLabel: {
-          //   show: true,
-          //   textStyle: {
-          //     color: '#fff',
-          //   },
-          // },
-        },
-        series: [
-          {
-            // 样式设置
-            // itemStyle: {
-            //   normal: {
-            //     barBorderRadius: [0, 10, 10, 0],
-            //     color: new $echarts.graphic.LinearGradient(0, 0, 1, 0, [
-            //       {
-            //         offset: 0,
-            //         color: '#005eaa',
-            //       },
-            //       {
-            //         offset: 0.5,
-            //         color: '#339ca8',
-            //       },
-            //       {
-            //         offset: 1,
-            //         color: '#cda819',
-            //       },
-            //     ]),
-            //   },
-            // },
-            // data: yData,
-            type: 'bar',
+      getState().then(() => {
+        setData()
+        myChart.setOption({
+          gird: {
+            left: '20',
+            containLabel: true,
           },
-        ],
+          // 设置柱状图
+          xAxis: {
+            type: 'value',
+            axisLabel: {
+              show: true,
+                color: '#fff',
+            },
+          },
+          yAxis: {
+            type: 'category',
+            data: xData,
+            axisLabel: {
+              show: true,
+                color: '#fff',
+            },
+          },
+          series: [
+            {
+              // 样式设置
+              itemStyle: {
+                  borderRadius: [0, 10, 10, 0],
+                  color: new $echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                    {
+                      offset: 0,
+                      color: '#005eaa',
+                    },
+                    {
+                      offset: 0.5,
+                      color: '#339ca8',
+                    },
+                    {
+                      offset: 1,
+                      color: '#cda819',
+                    },
+                  ]),
+              },
+              data: yData,
+              type: 'bar',
+            },
+          ],
+        })
       })
     })
     return {
       getState,
+      oneData,
+      xData,
+      yData,
+      setData,
     }
   },
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+
+.chart {
+  height: 4.5rem;
+}
+h2 {
+  height: 0.6rem;
+  color: #fff;
+  line-height: 0.6rem;
+  text-align: center;
+}
+</style>
