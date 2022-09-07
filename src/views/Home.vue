@@ -12,7 +12,7 @@
           <item-two></item-two>
         </itemBox>
       </section>
-      <section class="itemCenter"></section>
+      <section class="itemCenter"><ItemMap/></section>
       <section class="itemRight">
         <itemBox>
           <item-three></item-three>
@@ -32,6 +32,7 @@ import ItemTwo from '@/components/ItemTwo.vue'
 import ItemThree from '@/components/ItemThree.vue'
 import itemFour from '@/components/itemFour.vue'
 import ItemFour from '../components/itemFour.vue'
+import ItemMap from '../components/itemMap.vue'
 import { inject } from 'vue'
 export default {
   components: {
@@ -41,6 +42,7 @@ export default {
     ItemThree,
     itemFour,
     ItemFour,
+    ItemMap
   },
   setup() {
     let $echarts = inject('echarts')

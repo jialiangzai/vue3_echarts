@@ -1,6 +1,5 @@
 <template>
   <div>
-    图表一
     <div class="chart" id="oneChart">图表</div>
   </div>
 </template>
