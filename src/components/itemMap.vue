@@ -32,7 +32,7 @@ export default {
             text: '城市销量',
             left: '45%',
             textStyle: {
-              color: '#fff',
+              color: '#50a3ba',
               fontSize: 20,
               textShadowBlur: 10,
               textShadowColor: '#33ffff',

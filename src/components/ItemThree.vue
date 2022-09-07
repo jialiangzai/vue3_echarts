@@ -1,15 +1,59 @@
 <template>
   <div>
-3
+    <div class="chart" id="threeChart"></div>
   </div>
 </template>
 
 <script>
-  export default {
-    
-  }
+import { inject, onMounted, reactive } from 'vue'
+export default {
+  setup() {
+    let $echarts = inject('echarts')
+    let $http = inject('axios')
+    let threeData = reactive({})
+    async function getState() {
+      threeData = await $http({ url: '/three/data' })
+    }
+    onMounted(() => {
+      getState().then(() => {
+        console.log('饼状图', threeData.data.chartThree.chartData)
+        let myChart = $echarts.init(document.getElementById('threeChart'))
+        myChart.setOption({
+          // 设置图例
+          legend: {
+            top: 'bottom',
+          },
+          // 提示框
+          tooltip: {
+            show: true,
+          },
+          series: [
+            {
+              type: 'pie', // 类型为饼状图
+              data: threeData.data.chartThree.chartData,
+              radius: [10, 100],
+              center: ['50%', '45%'],
+              roseType: 'area',
+              itemStyle: {
+                borderRadius: 10,
+              },
+            },
+          ],
+        })
+        // echarts自适应
+        window.onresize = myChart.resize
+      })
+    })
+    return {
+      getState,
+      threeData,
+    }
+  },
+}
 </script>
 
 <style lang="less" scoped>
-
+.chart {
+  height: 4.5rem;
+}
 </style>
